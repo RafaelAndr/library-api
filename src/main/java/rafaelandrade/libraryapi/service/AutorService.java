@@ -1,23 +1,27 @@
 package rafaelandrade.libraryapi.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import rafaelandrade.libraryapi.exceptions.OperacaoNaoPermitidaExceptions;
 import rafaelandrade.libraryapi.model.Autor;
 import rafaelandrade.libraryapi.repository.AutorRepository;
+import rafaelandrade.libraryapi.repository.LivroRepository;
+import rafaelandrade.libraryapi.validator.AutorValidator;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor  //Cria construtores a partir de atributos com tipo final
 public class AutorService {
 
     private final AutorRepository repository;
-
-    public AutorService(AutorRepository repository){
-        this.repository = repository;
-    }
+    private final AutorValidator validator;
+    private final LivroRepository livroRepository;
 
     public Autor salvar(Autor autor){
+        validator.validar(autor);
         return repository.save(autor);
     }
 
@@ -25,6 +29,7 @@ public class AutorService {
         if(autor.getId() == null){
             throw new IllegalArgumentException("Autor não encontrado");
         }
+        validator.validar(autor);
         repository.save(autor);
     }
 
@@ -33,6 +38,9 @@ public class AutorService {
     }
 
     public void deletar(Autor autor){
+        if (possuiLivro(autor)){
+            throw new OperacaoNaoPermitidaExceptions("Autor possui livros cadastrados");
+        }
         repository.delete(autor);
     }
 
@@ -50,5 +58,9 @@ public class AutorService {
         }
 
         return repository.findAll();
+    }
+
+    public boolean possuiLivro(Autor autor){
+        return livroRepository.existsByAutor(autor);
     }
 }

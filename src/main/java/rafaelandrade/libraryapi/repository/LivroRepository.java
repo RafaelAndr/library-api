@@ -18,4 +18,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     List<Livro> findByTituloAndPreco(String titulo, BigDecimal preco);
 
     List<Livro> findByTituloOrIsbn(String titulo, String isbn);
+
+    boolean existsByAutor(Autor autor);
 }
