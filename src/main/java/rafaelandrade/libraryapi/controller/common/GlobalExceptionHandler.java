@@ -1,6 +1,7 @@
 package rafaelandrade.libraryapi.controller.common;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Repository;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import rafaelandrade.libraryapi.controller.dto.ErroCampo;
 import rafaelandrade.libraryapi.controller.dto.ErroResposta;
+import rafaelandrade.libraryapi.exceptions.CampoInvalidoException;
 import rafaelandrade.libraryapi.exceptions.OperacaoNaoPermitidaExceptions;
 import rafaelandrade.libraryapi.exceptions.RegistroDuplicadoExceptions;
 
@@ -44,6 +46,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErroResposta handleOperacaoNaoPermitidaException(OperacaoNaoPermitidaExceptions e){
         return ErroResposta.conflito(e.getMessage());
+    }
+
+    @ExceptionHandler(CampoInvalidoException.class)
+    @ResponseStatus(HttpStatus.UNPROCESSABLE_ENTITY)
+    public ErroResposta handleCampoInvalidoExcepiton(CampoInvalidoException e){
+        return new ErroResposta(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Erro de validação", List.of(new ErroCampo(e.getCampo(), e.getMessage())));
     }
 
     @ExceptionHandler(RuntimeException.class)

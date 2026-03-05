@@ -22,6 +22,7 @@ class LivroRepositoryTest {
 
     @Autowired
     AutorRepository autorRepository;
+
     @Autowired
     private LivroRepository livroRepository;
 
