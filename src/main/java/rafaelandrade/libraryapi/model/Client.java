@@ -11,14 +11,19 @@ import java.util.UUID;
 public class Client {
 
     @Id
+    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
+    @Column(name = "client_id")
     private String clientId;
 
+    @Column(name = "client_secret")
     private String clientSecret;
 
+    @Column(name = "redirect_uri")
     private String redirectUri;
 
+    @Column(name = "scope")
     private String scope;
 }
