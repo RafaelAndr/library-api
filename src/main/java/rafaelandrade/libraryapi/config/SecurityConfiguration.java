@@ -25,22 +25,16 @@ public class SecurityConfiguration {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
-                .formLogin(configurer -> {
-                    configurer.loginPage("/login");
-                })
+//                .formLogin(configurer -> {
+//                    configurer.loginPage("/login");
+//                })
+                .formLogin(Customizer.withDefaults())
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login").permitAll();
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
-//                    authorize.requestMatchers(HttpMethod.POST, "/autores/**").hasAuthority("CADASTRAR_AUTOR");
-//                    authorize.requestMatchers(HttpMethod.DELETE, "/autores/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.PUT, "/autores/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.POST, "/livros/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.DELETE, "/livros/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.PUT, "/livros/**").hasRole("ADMIN");
-//                    authorize.requestMatchers(HttpMethod.GET, "/livros/**").hasAnyRole("USER", "ADMIN");
-//                    authorize.requestMatchers(HttpMethod.GET, "/autores/**").hasAnyRole("USER", "ADMIN");
                     authorize.anyRequest().authenticated();
                 })
+                .oauth2Login(Customizer.withDefaults())
                 .build();
     }
 
@@ -49,24 +43,6 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10);
     }
 
-//    @Bean
-//    public UserDetailsService userDetailsServiceMemory(PasswordEncoder passwordEncoder) {
-//
-//        UserDetails user1 = User.builder()
-//                .username("usuario")
-//                .password(passwordEncoder.encode("123"))
-//                .roles("USER")
-//                .build();
-//
-//        UserDetails user2 = User.builder()
-//                .username("admin")
-//                .password(passwordEncoder.encode("321"))
-//                .authorities("CADASTRAR_AUTOR")
-//                .roles("ADMIN")
-//                .build();
-//
-//        return new InMemoryUserDetailsManager(user1, user2);
-//    }
 
     @Bean
     public UserDetailsService userDetailsService(UsuarioService usuarioService) {
