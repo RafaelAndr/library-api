@@ -14,6 +14,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import rafaelandrade.libraryapi.security.CustomUserDetailsService;
+import rafaelandrade.libraryapi.security.SocialLoginSuccessHandler;
 import rafaelandrade.libraryapi.service.UsuarioService;
 
 @Configuration
@@ -22,7 +23,7 @@ import rafaelandrade.libraryapi.service.UsuarioService;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, SocialLoginSuccessHandler socialLoginSuccessHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
@@ -35,7 +36,9 @@ public class SecurityConfiguration {
                     authorize.requestMatchers(HttpMethod.POST, "/usuarios").permitAll();
                     authorize.anyRequest().authenticated();
                 })
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2 -> {
+                    oauth2.successHandler(socialLoginSuccessHandler);
+                })
                 .build();
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import rafaelandrade.libraryapi.security.CustomAuthentication;
 
 @Controller
 public class LoginViewController {
@@ -17,6 +18,9 @@ public class LoginViewController {
     @GetMapping("/")
     @ResponseBody
     public String homePage(Authentication authentication){
-        return "Olá " + authentication.getName();
+        if(authentication instanceof CustomAuthentication customAuthentication) {
+            System.out.println(customAuthentication.getName());
+        }
+        return "Olá " + authentication.getName() + authentication.getPrincipal();
     }
 }
