@@ -37,13 +37,7 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         Usuario user = usuarioService.getByEmail(email);
 
         if (user == null){
-            user = new Usuario();
-            user.setEmail(email);
-            user.setLogin(email);
-            user.setSenha(PATTERN_PASSWORD);
-            user.setRoles(List.of("OPERADOR"));
-            usuarioService.salvar(user);
-
+            user = registerUser(email);
         }
 
         authentication = new CustomAuthentication(user);
@@ -51,6 +45,21 @@ public class SocialLoginSuccessHandler extends SavedRequestAwareAuthenticationSu
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         super.onAuthenticationSuccess(request, response, authentication);
+    }
+
+    private Usuario registerUser(String email) {
+        Usuario user;
+        user = new Usuario();
+        user.setEmail(email);
+        user.setLogin(getUserName(email));
+        user.setSenha(PATTERN_PASSWORD);
+        user.setRoles(List.of("OPERADOR"));
+        usuarioService.salvar(user);
+        return user;
+    }
+
+    private String getUserName(String email){
+        return email.substring(0, email.indexOf("@"));
     }
 
 }
