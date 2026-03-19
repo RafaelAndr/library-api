@@ -12,6 +12,8 @@ import org.springframework.security.config.core.GrantedAuthorityDefaults;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
+import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
 import rafaelandrade.libraryapi.security.CustomUserDetailsService;
 import rafaelandrade.libraryapi.security.SocialLoginSuccessHandler;
@@ -41,20 +43,8 @@ public class SecurityConfiguration {
                             .loginPage("/login")
                             .successHandler(socialLoginSuccessHandler);
                 })
+                .oauth2ResourceServer(oauth2Rs -> oauth2Rs.jwt(Customizer.withDefaults()))
                 .build();
-    }
-
-    @Bean
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder(10);
-    }
-
-
-    //@Bean
-    public UserDetailsService userDetailsService(UsuarioService usuarioService) {
-
-        return new CustomUserDetailsService(usuarioService);
-
     }
 
     @Bean //eliminar a necessidade do prefixo ROLE_
