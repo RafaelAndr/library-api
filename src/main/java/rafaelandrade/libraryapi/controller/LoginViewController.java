@@ -23,4 +23,10 @@ public class LoginViewController {
         }
         return "Olá " + authentication.getName() + authentication.getPrincipal();
     }
+
+    @GetMapping("/authorized")
+    @ResponseBody
+    public String getAuthorizationCode(@RequestParam("code") String code){
+        return "seu authorization code: " + code;
+    }
 }
