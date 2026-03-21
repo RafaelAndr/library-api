@@ -1,5 +1,6 @@
 package rafaelandrade.libraryapi.common;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.FieldError;
@@ -17,6 +18,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -39,6 +41,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RegistroDuplicadoExceptions.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErroResposta handleRegistroDuplicadoException(RegistroDuplicadoExceptions e){
+        log.error("Registro duplicado {}", e.getMessage());
         return ErroResposta.conflito(e.getMessage());
     }
 
